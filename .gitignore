@@ -1,5 +1,14 @@
 .DS_Store
-node_modules/
-.netlify/
+
+# tooling and local config
 .claude/
-project image/
+.agents/
+skills-lock.json
+
+# not for the public repo
+Faizan_Khan_Resume_Industry.pdf
+*.pdf
+
+# source art the site does not ship
+faizan illustration-*.jpeg
+assets/faizan-thinking.jpg
