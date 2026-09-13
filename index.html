@@ -1655,11 +1655,11 @@ html.is-loading, html.is-loading body { overflow: hidden; }
 }
 
 /* ─────────────────────────────  create band  ─────────────────────────────
-   The sign-off: one photograph pulled all the way to the accent, the word
-   set large enough that the page runs out of room before the word does. The
-   picture is flattened to grey, then the accent is blended over it in colour
-   rather than multiply: the photograph keeps its own light and only takes the
-   hue, so the band reads as a duotone print instead of a red slab. */
+   The sign-off. The page runs ink from About down, so the close is a single
+   light plate: a photograph toned to the same paper the hero sits on, with the
+   word overprinted in ink. No accent here at all — the accent is spent on the
+   links and the timeline spine, and a coloured slab at the end would be the
+   loudest thing on a page that has been quiet for five sections. */
 .band {
   position: relative;
   z-index: 6;
@@ -1667,8 +1667,7 @@ html.is-loading, html.is-loading body { overflow: hidden; }
   overflow: hidden;
   margin: 0 var(--gutter);
   height: clamp(190px, 30vw, 420px);
-  background: var(--accent-dim);
-  border-radius: 2px;
+  background: var(--paper);
 }
 .band__img {
   position: absolute;
@@ -1676,14 +1675,17 @@ html.is-loading, html.is-loading body { overflow: hidden; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: grayscale(1) brightness(1.16) contrast(0.82);
+  /* the photograph is already close to monochrome; this only settles it */
+  filter: grayscale(1) brightness(1.04) contrast(0.94);
 }
+/* pulls the neutral grey over to the warm off-white the rest of the site uses,
+   so the plate belongs to the page rather than sitting on it */
 .band::after {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: var(--accent);
+  background: var(--paper);
   mix-blend-mode: color;
   pointer-events: none;
 }
@@ -1697,8 +1699,7 @@ html.is-loading, html.is-loading body { overflow: hidden; }
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
   font-size: clamp(8.5px, 0.9vw, 14px);
   line-height: 1.85;
-  letter-spacing: 0;
-  color: rgba(10, 10, 10, 0.86);
+  color: rgba(10, 10, 10, 0.46);
   white-space: pre;
 }
 .band__code--a { left: clamp(12px, 2.4vw, 38px); }
@@ -1708,14 +1709,18 @@ html.is-loading, html.is-loading body { overflow: hidden; }
   position: absolute;
   z-index: 2;
   left: clamp(10px, 2.2vw, 34px);
-  /* the descender line falls past the edge: the page stops, the word does not */
+  /* the baseline falls past the edge: the page stops, the word does not */
   bottom: clamp(-34px, -3.4vw, -12px);
   margin: 0;
   font-size: clamp(4.5rem, 24vw, 23rem);
   font-weight: 700;
   line-height: 0.78;
   letter-spacing: -0.045em;
+  /* held back so the fog reads through it. Multiply rather than flat alpha:
+     alpha would grey it, this keeps it as ink laid over the plate */
   color: var(--ink);
+  opacity: 0.62;
+  mix-blend-mode: multiply;
   white-space: nowrap;
 }
 
@@ -2185,9 +2190,9 @@ body.is-ready .hero__copy[data-split='true'] .w {
          <p class="entry__when">2026 to present</p>
          <span class="entry__mark" aria-hidden="true"><i class="entry__fill"></i></span>
          <div class="entry__body">
-           <h3 class="entry__title">Co-founder, Engineering</h3>
+           <h3 class="entry__title">Founding Engineer</h3>
            <p class="entry__org">DevArq</p>
-           <p class="entry__detail">Client websites for architecture and design firms, plus the automation behind the business: a scraping and enrichment pipeline over roughly 200 Swiss firms with lead scoring, and Gmail API outreach tooling.</p>
+           <p class="entry__detail">Built the data and automation layer: a scraping and enrichment pipeline over roughly 200 Swiss firms, scored for lead quality, feeding Gmail API outreach tooling. Client sites for architecture and design studios on top of it.</p>
            <p class="entry__links">
              <a href="https://devarq.tech" target="_blank" rel="noopener noreferrer">devarq.tech</a>
              <a href="https://arcosdesign.net" target="_blank" rel="noopener noreferrer">arcosdesign.net</a>
@@ -2365,7 +2370,7 @@ body.is-ready .hero__copy[data-split='true'] .w {
 <!-- decoration: the word and the picture carry no information the page has not
      already given, so they stay out of the accessibility tree -->
 <section class="band" aria-hidden="true">
-  <img class="band__img" src="assets/band-ridge.jpg" alt=""
+  <img class="band__img" src="assets/band-fog.jpg" alt=""
        width="1600" height="740" loading="lazy" decoding="async">
   <pre class="band__code band__code--a">app = FastAPI()
 

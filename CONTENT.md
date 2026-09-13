@@ -141,7 +141,7 @@ Figma · wireframing · prototyping · user research · interaction design · re
 | Sep 2025 — Sep 2027 | MSc Computer Science | Université de Genève (UNIGE) | Applied NLP, retrieval-augmented generation, human-centred AI, and reproducible scientific computing. |
 | Feb — Jun 2026 | AIBility & RCnum Graph-RAG | Academic projects · UNIGE | Two full-stack AI builds: an accessible-mobility platform with disability orgs, and a knowledge-grounded QA system over historical archives. |
 | Sep 2025 — Present | IT Head | GESMA — Geneva English-Speaking Muslims Association · [gesma.ch](https://gesma.ch) | Handle the organisation's IT and web presence, making it easier for newcomers in Geneva to find and join. |
-| 2026 — Present | Co-founder, Engineering | DevArq · [devarq.tech](https://devarq.tech) | Built client websites for architecture and design firms (live: [arcosdesign.net](https://arcosdesign.net)) and the automation behind the business: a scraping and enrichment pipeline over ~200 Swiss firms with lead scoring, plus Gmail API outreach tooling. |
+| 2026 — Present | Founding Engineer | DevArq · [devarq.tech](https://devarq.tech) | Built the data and automation layer: a scraping and enrichment pipeline over ~200 Swiss firms, scored for lead quality, feeding Gmail API outreach tooling. Client sites for architecture and design studios on top of it (live: [arcosdesign.net](https://arcosdesign.net)). |
 | Jul 2023 — Jul 2024 | Data Science / ML Lead | Robogyan Society · [robogyan.tech](https://robogyan.tech) | Turned a 100+ member group into capable practitioners — ran hands-on workshops for mixed technical and non-technical members, and became the person people came to with ML questions. |
 | Jul — Aug 2022 | Data Science Intern | TwoWaits Pvt Ltd | Built a content-based recommender over 5,000+ items using cosine similarity, >90% accuracy. |
 | 2020 — 2024 | BTech Information Technology · GPA 8.2 / 10 | GGSIPU, Delhi | National Winner — Innovate@Sigfest · 4th Worldwide — Considition 2022 · Winner — Glitch Hackathon, SNU · 1st Runner-Up — NPCI ML Hackathon. |
@@ -203,9 +203,15 @@ section is reached; static under reduced motion.
 Decorative, `aria-hidden`. Full-bleed inside the page gutter, directly below the
 contact section. No footer bar, no rule across the page.
 
-- **Image:** `assets/band-ridge.jpg`, Alex Wicks via Unsplash. Greyed and
-  lifted, then the accent blended over it in `color` rather than `multiply`, so
-  the photograph keeps its own light and only takes the hue.
-- **Code overlay:** two monospace columns, from the AIBILITY WebSocket handler
-  and the accessibility scorer. Second column hidden below 760px.
-- **Word:** CREATE, baseline running past the bottom edge.
+- **Image:** `assets/band-fog.jpg` — a ridge dissolving into fog, Tyler
+  Lastovich via Unsplash. Greyed, settled, and toned toward the page's own
+  off-white with a `color` blend, so the plate belongs to the site rather than
+  sitting on it.
+- **No accent.** The accent is spent on the links and the timeline spine. A
+  coloured slab at the end would be the loudest thing on a page that has been
+  quiet for five sections; the close is ink on paper, like the hero.
+- **Code overlay:** two monospace columns in ink, from the AIBILITY WebSocket
+  handler and the accessibility scorer. Second column hidden below 760px.
+- **Word:** CREATE, overprinted in ink at 62% with `mix-blend-mode: multiply`
+  rather than flat alpha, which would grey it. Baseline runs past the bottom
+  edge.
