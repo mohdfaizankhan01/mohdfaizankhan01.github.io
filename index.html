@@ -146,10 +146,7 @@ a { color: inherit; }
 }
 body.is-dark .monogram::before,
 body.is-dark .menu-toggle::before { opacity: 1; }
-/* the overlay is paper, so the ink pads have nothing to sit against and read
-   as smudges behind the controls */
-[data-menu-open='true'] .monogram::before,
-[data-menu-open='true'] .menu-toggle::before { opacity: 0; }
+/* The menu overlay overrides all of this; see the ink-state block below. */
 
 .monogram {
   font-family: var(--font-script);
@@ -391,6 +388,22 @@ body.is-dark .menu-toggle .bars::after { background: var(--paper); }
 
 @media (hover: hover) and (pointer: fine) {
   body.is-dark .menu-toggle:hover { background-color: rgba(244, 242, 237, 0.1); }
+}
+
+/* The overlay is paper whatever the page was doing underneath it, and is-dark
+   is still set by scroll position behind it. So for as long as the menu is
+   open the header controls drop the dark treatment entirely: ink again, and
+   no ink pads, which have nothing to sit against on cream and read as smudges.
+   Written to outrank the is-dark rules above, not to sit alongside them. */
+body[data-menu-open='true'] .monogram,
+body[data-menu-open='true'] .menu-toggle { color: var(--ink); }
+body[data-menu-open='true'] .menu-toggle .bars::before,
+body[data-menu-open='true'] .menu-toggle .bars::after { background: var(--ink); }
+body[data-menu-open='true'] .monogram::before,
+body[data-menu-open='true'] .menu-toggle::before { opacity: 0; }
+
+@media (hover: hover) and (pointer: fine) {
+  body[data-menu-open='true'] .menu-toggle:hover { background-color: rgba(10, 10, 10, 0.06); }
 }
 
 /* ─────────────────────────────  section tint  ─────────────────────────────
