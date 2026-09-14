@@ -1,0 +1,13 @@
+{
+  "name": "Faizan Khan - AI Builder & Mentor",
+  "short_name": "Faizan Khan",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#F4F2ED",
+  "theme_color": "#F4F2ED",
+  "icons": [
+    { "src": "assets/favicon.svg", "type": "image/svg+xml", "sizes": "any", "purpose": "any" },
+    { "src": "assets/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "maskable" },
+    { "src": "assets/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "maskable" }
+  ]
+}
