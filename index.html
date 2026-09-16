@@ -47,6 +47,19 @@
   --font-script:  'Mrs Saint Delafield', 'Snell Roundhand', cursive;
 
   /* strong curves — the built-in easings are too weak */
+  /* Two overlapping circles, mirrored so the high lobe is on the LEFT.
+     Orientation is not decoration: the label reads left to right and the
+     label flips to paper partway through, so the left end has to be covered
+     first. Unmirrored, cards c and d - whose pills are already paper - show
+     a paper label on a paper pill for a few hundred ms. What fills last is
+     now the top right, which is empty space beside the arrow.
+     The circles alone are not a flood: each lobe curves back up underneath,
+     so the left side of the shape stops about 17% short of the pill's floor
+     and leaves a sliver of the old colour behind. The rect under them is the
+     body of water - the circles are only its surface.
+     Stretched to the pill by preserveAspectRatio='none'. */
+  --wave-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 15 14' preserveAspectRatio='none'%3E%3Crect x='0' y='6' width='15' height='8'/%3E%3Cpath transform='translate(15 0.18) scale(-1 1)' d='M 5 3.523 C 5.078 3.523 5.155 3.525 5.233 3.528 C 5.873 1.483 7.765 0 10 0 C 12.761 0 15 2.264 15 5.057 C 15 7.85 12.761 10.114 10 10.114 C 9.922 10.114 9.845 10.112 9.767 10.108 C 9.127 12.154 7.235 13.636 5 13.636 C 2.239 13.636 0 11.372 0 8.58 C 0 5.787 2.239 3.523 5 3.523 Z'/%3E%3C/svg%3E");
+
   --ease-out:    cubic-bezier(0.23, 1, 0.32, 1);
   --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
 
@@ -64,6 +77,7 @@
   --z-overlay:  100;
   --z-header:   120;
   --z-loader:   200;
+  --z-cursor:   300;   /* over the loader: it is the pointer, nothing occludes it */
 }
 
 /* ─────────────────────────────  reset  ───────────────────────────── */
@@ -661,6 +675,42 @@ html:not(.js) .about mark { background-size: 100% 100%; color: var(--paper); }
   color: #A8A49B;
 }
 
+/* ── the four figures, rendered as one lit sign ──────────────────────────
+   Same grid, same hairline, same captions — only the numerals change, from
+   Poppins to a 3x5 dot bitmap. They stay side by side rather than cycling:
+   a sign that shows one message at a time is right for a hero with one thing
+   to say, and wrong for evidence, which has to be comparable at a glance.
+   The lit dots are paper, not accent. Accent on ink measures 2.38:1, and
+   these are the numbers the section is arguing with, not decoration — the
+   warmth comes from the bloom instead. Flip --dot-lit to push it orange.
+   Without JS the plain numerals stand, untouched. */
+.stat__field {
+  --pitch:   clamp(7.5px, 0.92vw, 10.5px);
+  --dot-lit: var(--paper);
+  display: block;
+  width: calc(var(--cols, 13) * var(--pitch));
+  height: auto;
+  /* the glow has to spill past the grid, and a filter clips to the box */
+  overflow: visible;
+  filter: drop-shadow(0 0 calc(var(--pitch) * 0.55) rgba(196, 43, 20, 0.5));
+}
+/* Every cell in the grid is one dot, dim until the figure needs it. The
+   count runs by switching cells, not by rebuilding them, so the sign behaves
+   like hardware: the lamps were always there, the number decides which are
+   lit. The short fade is the filament - a dot that snaps makes a fast count
+   strobe, one that warms reads as a mechanical counter turning over. */
+.stat__dot {
+  fill: var(--dot-lit);
+  opacity: 0.07;
+  transition: opacity 150ms linear;
+}
+.stat__dot.is-on { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* the figure still arrives, it just arrives already counted */
+  .stat__dot { transition: none; }
+}
+
 /* ── stagger-text ────────────────────────────────────────────────────────
    Ported from VengeanceUI's stagger-text (registry:ui, framer-motion) to
    vanilla CSS: same word split, same 110% masked start, same 600ms
@@ -889,11 +939,11 @@ html:not(.js) .about mark { background-size: 100% 100%; color: var(--paper); }
   color: var(--card-fg);
   box-shadow: 0 26px 60px rgba(0, 0, 0, 0.5);
 }
-.deck__card--a { --card-bg: #F4F2ED; --card-fg: #0A0A0A; --card-mute: #6F6B63; --card-rule: rgba(10,10,10,0.14); }
-.deck__card--b { --card-bg: #DDD6C6; --card-fg: #0A0A0A; --card-mute: #6A665E; --card-rule: rgba(10,10,10,0.16); }
-.deck__card--c { --card-bg: #C42B14; --card-fg: #F4F2ED; --card-mute: #F0C9C0; --card-rule: rgba(244,242,237,0.28); }
+.deck__card--a { --card-bg: #F4F2ED; --card-fg: #0A0A0A; --card-mute: #6F6B63; --card-rule: rgba(10,10,10,0.14); --card-wave: #C42B14; }
+.deck__card--b { --card-bg: #DDD6C6; --card-fg: #0A0A0A; --card-mute: #6A665E; --card-rule: rgba(10,10,10,0.16); --card-wave: #C42B14; }
+.deck__card--c { --card-bg: #C42B14; --card-fg: #F4F2ED; --card-mute: #F0C9C0; --card-rule: rgba(244,242,237,0.28); --card-wave: #0A0A0A; }
 .deck__card--d {
-  --card-bg: #17130F; --card-fg: #F4F2ED; --card-mute: #A29C92; --card-rule: rgba(244,242,237,0.20);
+  --card-bg: #17130F; --card-fg: #F4F2ED; --card-mute: #A29C92; --card-rule: rgba(244,242,237,0.20); --card-wave: #C42B14;
   border: 1px solid rgba(244, 242, 237, 0.16);   /* or it dissolves into the page */
 }
 
@@ -963,6 +1013,9 @@ html:not(.js) .about mark { background-size: 100% 100%; color: var(--paper); }
   margin-top: var(--space-6);
 }
 .deck__cta {
+  position: relative;
+  isolation: isolate;          /* so the blob can sit under the label, over the pill */
+  overflow: clip;              /* the blob lives outside the pill until it is wanted */
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -975,7 +1028,33 @@ html:not(.js) .about mark { background-size: 100% 100%; color: var(--paper); }
   letter-spacing: 0.12em;
   text-transform: uppercase;
   text-decoration: none;
-  transition: opacity 200ms ease, translate 200ms var(--ease-out);
+  /* leaving: the label drops back immediately, so it never sits unreadable
+     over a receding flood. Entering, the same property waits - see :hover */
+  transition: color 150ms ease, translate 200ms var(--ease-out), scale 140ms var(--ease-out);
+}
+
+/* ── the flood ───────────────────────────────────────────────────────────
+   Two overlapping circles as a mask, stretched across the pill: the top
+   edge runs low on the left and high on the right, so the colour arrives
+   as a slanted front rather than a straight bar. The box is twice the
+   pill's height and parked below it, which is what keeps the trailing edge
+   out of sight - a shape this size can never show its own bottom curve
+   inside the pill. Transform only, so the sweep never touches layout.
+   Each card names its own flood: card c is red already, and red on red
+   measures 1.00:1, so it floods ink instead. */
+.deck__cta::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: -20%;
+  width: 140%;
+  bottom: -55%;
+  height: 210%;
+  background: var(--card-wave, var(--accent));
+  -webkit-mask: var(--wave-shape) no-repeat center / 100% 100%;
+          mask: var(--wave-shape) no-repeat center / 100% 100%;
+  transform: translateY(102%);
+  transition: transform 520ms var(--ease-out);
 }
 .deck__links { display: flex; align-items: center; gap: var(--space-4); margin: 0; }
 .deck__alt {
@@ -999,9 +1078,23 @@ html:not(.js) .about mark { background-size: 100% 100%; color: var(--paper); }
 .deck__no small { font-size: 0.5em; font-weight: 500; color: var(--card-mute); }
 
 @media (hover: hover) and (pointer: fine) {
-  .deck__cta:hover { opacity: 0.86; translate: 0 -2px; }
+  /* the label waits for the front to reach it, so it flips on a covered pill
+     rather than halfway through the sweep. Delay order follows the shorthand:
+     color, translate, scale. */
+  .deck__cta:hover { translate: 0 -2px; color: var(--paper); transition-delay: 170ms, 0s, 0s; }
+  .deck__cta:hover::before { transform: translateY(-6%); }
   .deck__alt:hover { border-color: currentColor; }
 }
+
+/* Focus is not hover: a keyboard user gets the same affordance, and gets it
+   on every device rather than only pointer ones. It carries hover's delay for
+   the same reason hover needs it - on cards c and d the pill is paper before
+   the flood lands, and a paper label on a paper pill is an invisible label.
+   Press feedback lives out here too: a touch device never matches hover, and
+   that is exactly where a tap most needs to acknowledge itself. */
+.deck__cta:focus-visible { color: var(--paper); transition-delay: 170ms, 0s, 0s; }
+.deck__cta:focus-visible::before { transform: translateY(-6%); }
+.deck__cta:active { scale: 0.97; }
 
 /* ── the fan, only where there is room and a timeline to drive it ────────── */
 @supports (animation-timeline: view()) {
@@ -1730,6 +1823,58 @@ html.is-loading, html.is-loading body { overflow: hidden; }
 .band__code--a { left: clamp(12px, 2.4vw, 38px); }
 .band__code--b { left: 57%; }
 
+/* the live readout, third instrument on the plate. The two listings beside it
+   are source at rest; this one reads the room the page is being read in. Same
+   ink, same size, same line — it is another thing lying on the desk, not a
+   widget parked on top of one. Only where there is a mouse, and only where
+   there is width for it: below that it would crowd the second listing. */
+.band__hud {
+  position: absolute;
+  z-index: 2;
+  top: clamp(14px, 2.6vw, 38px);
+  right: clamp(12px, 2.4vw, 38px);
+  display: none;
+  grid-template-columns: auto auto;
+  align-items: center;
+  gap: 2px clamp(8px, 1vw, 14px);
+  margin: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: clamp(8.5px, 0.9vw, 14px);
+  line-height: 1.85;
+  color: rgba(10, 10, 10, 0.46);
+  /* furniture, never a target: the cursor it is reporting must pass through it */
+  pointer-events: none;
+  user-select: none;
+}
+/* 1320 is where the second listing's longest line stops reaching under the
+   readout: measured, not guessed — below it the two overlap outright */
+@media (min-width: 1320px) and (hover: hover) and (pointer: fine) {
+  .band__hud { display: grid; }
+}
+.band__hud dt {
+  letter-spacing: 0.08em;
+  opacity: 0.62;
+}
+.band__hud dd {
+  margin: 0;
+  justify-self: end;
+  /* the figures change every frame; proportional digits would jitter the column */
+  font-variant-numeric: tabular-nums;
+}
+.band__hud-trace {
+  display: block;
+  width: clamp(56px, 6vw, 84px);
+  height: clamp(12px, 1.3vw, 18px);
+}
+.band__hud-trace polyline {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1;
+  stroke-linejoin: round;
+  /* the box is stretched to fit, so the line is pinned back to a true hairline */
+  vector-effect: non-scaling-stroke;
+}
+
 .band__word {
   position: absolute;
   z-index: 2;
@@ -1755,6 +1900,51 @@ html.is-loading, html.is-loading body { overflow: hidden; }
 @media (prefers-reduced-transparency: reduce) {
   .band__img { display: none; }
 }
+
+/* ── the pointer ─────────────────────────────────────────────────────────
+   A Figma cursor, arrow only. Paper fill on an ink outline rather than the
+   site's accent: one colour has to stay legible over cream sections, the ink
+   About panel, a red card and a photograph, and only this pairing does. */
+.cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: var(--z-cursor);
+  /* it reports the pointer - it must never be able to catch it */
+  pointer-events: none;
+  will-change: transform;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.cursor.is-awake { opacity: 1; }
+.cursor__arrow {
+  display: block;
+  width: 23px;
+  height: 23px;
+  /* lifts it off busy ground: the band photograph and the ink illustration */
+  filter: drop-shadow(0 1px 2px rgba(10, 10, 10, 0.32));
+}
+/* The native cursor is only given up once this one is on screen - the class
+   goes on after the first real move, so a failed script leaves the system
+   arrow exactly where it was.
+   !important is deliberate here, and is the one place on this page that earns
+   it: this has to beat every local cursor rule, present and future. A blanket
+   takeover that loses a specificity race does not degrade politely, it draws a
+   system arrow on top of the custom one. .about__stage.is-draggable
+   .about__obj is (0,3,0) and already outranks any sane blanket selector. */
+@media (hover: hover) and (pointer: fine) {
+  html.has-cursor body,
+  html.has-cursor body * { cursor: none !important; }
+
+  /* The one exemption. The illustration in About is draggable and says so
+     with nothing but the system grab cursor; with the tag gone there is
+     nothing else left to say it, so the real cursor comes back here and the
+     custom arrow stands down for it - see .cursor.is-over-grab. */
+  html.has-cursor .about__stage.is-draggable .about__obj { cursor: grab !important; }
+  html.has-cursor .about__stage.is-dragging .about__obj { cursor: grabbing !important; }
+}
+/* two cursors at once would be worse than none */
+.cursor.is-over-grab { opacity: 0; }
 
 /* ─────────────────────────────  menu overlay  ───────────────────────────── */
 .nav-overlay {
@@ -1974,6 +2164,10 @@ body.is-ready .hero__copy[data-split='true'] .w {
   .close__links span,
   .close__copy:active { translate: none; }
   .sig__ink, .sig__line { animation: none; stroke-dashoffset: 0; opacity: 1; }
+  /* the flood still happens - it simply stops being a journey */
+  .deck__cta::before { transition: none; }
+  .deck__cta { transition: color 120ms ease; }
+  .deck__cta:hover, .deck__cta:focus-visible { transition-delay: 0s; }
 }
 </style>
 </head>
@@ -2411,6 +2605,18 @@ async def ride(ws: WebSocket):
     if not hits:
         return None
     return round(mean(h.weight for h in hits), 2)</pre>
+  <dl class="band__hud" data-hud>
+    <dt data-hud-motion>CUR</dt>
+    <dd data-hud-motion><span data-hud-xy>X 0000  Y 0000</span></dd>
+    <dt data-hud-motion>VEL</dt>
+    <dd data-hud-motion>
+      <svg class="band__hud-trace" viewBox="0 0 84 18" preserveAspectRatio="none">
+        <polyline data-hud-vel points="0,18 84,18"/>
+      </svg>
+    </dd>
+    <dt>TIME</dt>
+    <dd><span data-hud-time>--:--:--</span></dd>
+  </dl>
   <p class="band__word">CREATE</p>
 </section>
 
@@ -2678,7 +2884,11 @@ async def ride(ws: WebSocket):
           el.style.transitionDelay = (Math.max(0, peers.indexOf(el)) * 70) + 'ms';
         }
         el.classList.add('is-in');
-        if (el.querySelector('.stat__num')) count(el.querySelector('.stat__num'));
+        /* the dot signs do not start here: they wait until the row reaches
+           the middle of the screen, on their own observer. This only catches
+           the case where no sign was built, where the old text count stands. */
+        var num = el.querySelector('.stat__num');
+        if (num && !num.lightUp) count(num);
         io.unobserve(el);
       });
     }, { rootMargin: '0px 0px -12% 0px', threshold: 0.15 });
@@ -2686,8 +2896,187 @@ async def ride(ws: WebSocket):
     items.forEach(function (el) { io.observe(el); });
   }
 
+  /* ── stats: the four figures as a dot-matrix sign ────────────────────────
+     A 3x5 bitmap per glyph, drawn as one SVG per figure. The field is sized
+     off the widest value so all four line up on the same grid, and each
+     figure is centred in it — a lone "5" sitting in a wide field is how a
+     real sign behaves. The value stays in the DOM as text for screen
+     readers; the grid is decoration and says so. Built only if JS runs, so
+     the plain numerals are the fallback rather than an empty box. */
+  var GLYPHS = {
+    '0': ['111', '101', '101', '101', '111'],
+    '1': ['010', '110', '010', '010', '111'],
+    '2': ['111', '001', '111', '100', '111'],
+    '3': ['111', '001', '111', '001', '111'],
+    '4': ['101', '101', '111', '001', '001'],
+    '5': ['111', '100', '111', '001', '111'],
+    '6': ['111', '100', '111', '101', '111'],
+    '7': ['111', '001', '001', '001', '001'],
+    '8': ['111', '101', '111', '101', '111'],
+    '9': ['111', '101', '111', '001', '111'],
+    '%': ['101', '001', '010', '100', '101'],
+    '+': ['000', '010', '111', '010', '000'],
+    '.': ['000', '000', '000', '000', '010']
+  };
+
+  function dotMatrix() {
+    var nums = [].slice.call(document.querySelectorAll('.stat__num'));
+    if (!nums.length || !document.createElementNS) return;
+
+    var NS = 'http://www.w3.org/2000/svg';
+    var ROWS = 5, GW = 3, GAP = 1, PAD = 1;
+    var DUR   = 2200;  /* slow enough that the figures can actually be read
+                          turning over - a count you only see land is a fade */
+    var STEP  = 140;   /* between signs, so the row cascades left to right */
+    var PADTO = 0;     /* digits every figure is padded to - see below */
+
+    function glyphs(text) {
+      return String(text).split('').filter(function (ch) { return GLYPHS[ch]; });
+    }
+    function spec(el) {
+      var target = parseInt(el.dataset.count, 10);
+      if (isNaN(target)) return null;
+      return { target: target, suffix: el.dataset.suffix || '' };
+    }
+
+    /* one field width for all four, set by the widest *final* figure - the
+       count must never outgrow the grid it started in */
+    var specs = nums.map(spec);
+    var widest = 0;
+    specs.forEach(function (sp) {
+      if (sp) widest = Math.max(widest, glyphs(sp.target + sp.suffix).length);
+    });
+    if (!widest) return;
+
+    /* Padded to a common width - 05, 09, 40, 10 - which is how a scoreboard
+       writes a number, and which means the glyph count never changes during a
+       count. Nothing shifts sideways as the figure climbs past nine. */
+    specs.forEach(function (sp) {
+      if (sp) PADTO = Math.max(PADTO, String(sp.target).length);
+    });
+    function face(value, sp) {
+      var n = String(value);
+      while (n.length < PADTO) n = '0' + n;
+      return n + sp.suffix;
+    }
+
+    widest = 0;
+    specs.forEach(function (sp) {
+      if (sp) widest = Math.max(widest, glyphs(face(sp.target, sp)).length);
+    });
+
+    var COLS = widest * GW + (widest - 1) * GAP + PAD * 2;
+    var FIELD = ROWS + PAD * 2;
+
+    nums.forEach(function (el, i) {
+      var sp = specs[i];
+      if (!sp) return;
+
+      var svg = document.createElementNS(NS, 'svg');
+      svg.setAttribute('viewBox', '0 0 ' + COLS + ' ' + FIELD);
+      svg.setAttribute('class', 'stat__field');
+      svg.setAttribute('aria-hidden', 'true');
+      svg.setAttribute('focusable', 'false');
+      svg.style.setProperty('--cols', COLS);
+
+      /* every lamp in the grid, built once */
+      var cells = [];
+      for (var r = 0; r < FIELD; r++) {
+        for (var c = 0; c < COLS; c++) {
+          var d = document.createElementNS(NS, 'rect');
+          d.setAttribute('x', (c + 0.15).toFixed(2));
+          d.setAttribute('y', (r + 0.15).toFixed(2));
+          d.setAttribute('width', '0.7');
+          d.setAttribute('height', '0.7');
+          d.setAttribute('rx', '0.16');
+          d.setAttribute('class', 'stat__dot');
+          svg.appendChild(d);
+          cells.push(d);
+        }
+      }
+
+      /* Only the cells that actually changed are touched. A frame of a count
+         moves a handful of dots out of ninety-one, and toggling all of them
+         every frame is how a sign like this turns into a jank generator. */
+      var lit = new Uint8Array(COLS * FIELD);
+      function draw(text) {
+        var next = new Uint8Array(COLS * FIELD);
+        var chars = glyphs(text);
+        /* centred in the panel. Safe to centre now that every figure is padded
+           to the same digit count: the width is fixed for the whole count, so
+           centring can never make the figure crawl sideways as it climbs. */
+        var span = chars.length * GW + (chars.length - 1) * GAP;
+        var x0 = Math.round((COLS - span) / 2);
+        chars.forEach(function (ch, g) {
+          var rows = GLYPHS[ch];
+          for (var r = 0; r < ROWS; r++) {
+            for (var c = 0; c < GW; c++) {
+              if (rows[r].charAt(c) !== '1') continue;
+              var col = x0 + g * (GW + GAP) + c;
+              if (col >= 0 && col < COLS) next[(PAD + r) * COLS + col] = 1;
+            }
+          }
+        });
+        for (var k = 0; k < next.length; k++) {
+          if (next[k] !== lit[k]) cells[k].classList.toggle('is-on', !!next[k]);
+        }
+        lit = next;
+      }
+
+      /* the sign is powered on and reading zero before you get to it */
+      draw(face(0, sp));
+
+      var read = document.createElement('span');
+      read.className = 'visually-hidden';
+      read.textContent = sp.target + sp.suffix;   /* the value, never the count */
+
+      el.textContent = '';
+      el.appendChild(read);
+      el.appendChild(svg);
+      el.dataset.counted = '1';          /* keeps the text count() off it */
+
+      el.lightUp = function (delay) {
+        if (el.dataset.run) return;      /* a sign does not count twice */
+        el.dataset.run = '1';
+        if (reduced.matches) { draw(face(sp.target, sp)); return; }
+        var t0 = null;
+        function step(now) {
+          if (t0 === null) t0 = now;
+          var t = Math.min((now - t0 - (delay || 0)) / DUR, 1);
+          if (t < 0) { requestAnimationFrame(step); return; }
+          /* quad rather than the cubic the text counter used: over this long a
+             run, cubic spends its last third parked on the final number */
+          var eased = 1 - Math.pow(1 - t, 2);
+          draw(face(Math.round(sp.target * eased), sp));
+          if (t < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      };
+    });
+
+    /* The row starts counting when it reaches the middle of the screen, not
+       when it first clips the bottom edge. A counter that has already finished
+       by the time it is in front of you was never really seen - the rootMargin
+       is a thin band across the centre of the viewport, and the row has to
+       cross it. The same idiom the timeline already uses for its active row. */
+    var row = document.querySelector('.stats');
+    if (!row || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function (recs) {
+      if (!recs[0].isIntersecting) return;
+      io.disconnect();
+      nums.forEach(function (el, k) {
+        if (el.lightUp) el.lightUp(k * STEP);
+      });
+    }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
+    io.observe(row);
+  }
+
   function countAll() {
-    document.querySelectorAll('.stat__num').forEach(function (el) { el.textContent = el.dataset.count + (el.dataset.suffix || ''); });
+    document.querySelectorAll('.stat__num').forEach(function (el) {
+      /* a sign that never animates is still a sign: light it, don't retype it */
+      if (el.lightUp) { el.lightUp(); return; }
+      el.textContent = el.dataset.count + (el.dataset.suffix || '');
+    });
   }
 
   function count(el) {
@@ -3265,10 +3654,176 @@ async def ride(ws: WebSocket):
 
   signature();
 
+  /* ── band: the live readout ──────────────────────────────────────────────
+     Sampled on a 50ms clock rather than on every mousemove: the listener only
+     records where the cursor is, so a fast flick costs one assignment instead
+     of a redraw. Forty samples at that rate is two seconds of trace, and a
+     fixed ceiling rather than a rolling max keeps it an instrument — a chart
+     that rescales itself on every flick reads as noise. It runs only while the
+     band is actually on screen, and the band is the last thing on the page, so
+     for most of a visit it costs nothing at all. */
+  function bandHud() {
+    var hud = document.querySelector('[data-hud]');
+    if (!hud || !finePtr.matches) return;
+
+    var xy   = hud.querySelector('[data-hud-xy]');
+    var vel  = hud.querySelector('[data-hud-vel]');
+    var time = hud.querySelector('[data-hud-time]');
+
+    function pad(n) { return n < 10 ? '0' + n : String(n); }
+    function clock() {
+      var d = new Date();
+      return pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
+    }
+
+    /* Still, not broken. The clock is true whether or not it ticks, so it is
+       read once and left; the two that only mean anything in movement are
+       taken out rather than parked at zero, which would read as a fault. */
+    if (reduced.matches || !('IntersectionObserver' in window)) {
+      Array.prototype.forEach.call(hud.querySelectorAll('[data-hud-motion]'),
+        function (el) { el.parentNode.removeChild(el); });
+      time.textContent = clock();
+      return;
+    }
+
+    var SAMPLES = 40;
+    var CEILING = 1800;          /* px/s at full height */
+    var W = 84, H = 18;
+    var STEP = 50;               /* ms between samples */
+
+    var history = [];
+    for (var i = 0; i < SAMPLES; i++) history.push(0);
+
+    var px = 0, py = 0;          /* where the cursor is now */
+    var sx = 0, sy = 0;          /* where it was at the last sample */
+    var primed = false, moved = false;
+    var timer = null;
+
+    /* the observer's first callback can land a second or more late while the
+       loader and the webfonts are still working, and an instrument reading
+       --:--:-- that whole time looks broken rather than idle */
+    var shown = clock();
+    time.textContent = shown;
+
+    function onMove(e) {
+      px = e.clientX;
+      py = e.clientY;
+      /* first reading is a position, not a jump from the origin */
+      if (!primed) { sx = px; sy = py; primed = true; }
+      moved = true;
+    }
+
+    function digits(n) {
+      var s = String(Math.max(0, Math.round(n)));
+      while (s.length < 4) s = '0' + s;
+      return s;
+    }
+
+    function tick() {
+      var dx = px - sx, dy = py - sy;
+      sx = px; sy = py;
+
+      history.shift();
+      history.push(Math.min(Math.sqrt(dx * dx + dy * dy) * (1000 / STEP) / CEILING, 1));
+
+      var pts = [];
+      for (var i = 0; i < SAMPLES; i++) {
+        pts.push((i / (SAMPLES - 1) * W).toFixed(1) + ',' + (H - history[i] * H).toFixed(1));
+      }
+      vel.setAttribute('points', pts.join(' '));
+
+      if (moved) {
+        xy.textContent = 'X ' + digits(px) + '  Y ' + digits(py);
+        moved = false;
+      }
+
+      var now = clock();
+      if (now !== shown) { shown = now; time.textContent = now; }
+    }
+
+    function run(on) {
+      if (on && !timer) {
+        window.addEventListener('mousemove', onMove, { passive: true });
+        timer = window.setInterval(tick, STEP);
+      } else if (!on && timer) {
+        window.removeEventListener('mousemove', onMove);
+        window.clearInterval(timer);
+        timer = null;
+      }
+    }
+
+    new IntersectionObserver(function (recs) { run(recs[0].isIntersecting); })
+      .observe(hud.parentNode);
+  }
+
+  bandHud();
+
+  /* ── cursor: the Figma pointer ───────────────────────────────────────────
+     Built here rather than in the markup, so scripting off leaves the page
+     with the cursor the system gave it. Nothing is drawn and the native
+     arrow is not surrendered until the pointer has actually moved: if this
+     function never runs, or runs and throws, the real cursor is still there. */
+  function figmaCursor() {
+    if (!finePtr.matches || !document.body) return;
+
+    var root = document.documentElement;
+    var el = document.createElement('div');
+    el.className = 'cursor';
+    el.setAttribute('aria-hidden', 'true');
+    el.innerHTML =
+      '<svg class="cursor__arrow" viewBox="0 0 24 24" aria-hidden="true">' +
+        '<path d="M4.04 4.69a.5.5 0 0 1 .65-.65l16 6.5a.5.5 0 0 1-.06.94l-6.13 1.58' +
+        'a2 2 0 0 0-1.43 1.44l-1.58 6.12a.5.5 0 0 1-.95.06z" ' +
+        'fill="#F4F2ED" stroke="#0A0A0A" stroke-width="1.3" stroke-linejoin="round"/>' +
+      '</svg>';
+    document.body.appendChild(el);
+
+    var x = 0, y = 0;        /* where the pointer actually is */
+    var awake = false;
+
+    function place() {
+      el.style.transform = 'translate3d(' + x + 'px,' + y + 'px,0)';
+    }
+
+    /* Straight to the true position, no easing and no frame loop: with the
+       tag gone there is nothing left that wants to lag, and an arrow that
+       lags is not a cursor, it is a cursor with input delay. */
+    function onMove(e) {
+      x = e.clientX; y = e.clientY;
+      if (!awake) {
+        awake = true;
+        root.classList.add('has-cursor');
+        el.classList.add('is-awake');
+      }
+      place();
+    }
+
+    function hide() { el.classList.remove('is-awake'); }
+    function show() { if (awake) el.classList.add('is-awake'); }
+
+    document.addEventListener('mousemove', onMove, { passive: true });
+    root.addEventListener('mouseleave', hide);
+    root.addEventListener('mouseenter', show);
+    window.addEventListener('blur', hide);
+    window.addEventListener('focus', show);
+
+    /* The illustration in About says "you can drag me" with nothing but the
+       system grab cursor, and the CSS hands that one cursor back. Standing the
+       custom arrow down is the other half of it: without this the page draws
+       two cursors on the same pixel. */
+    function draggable(node) { return !!(node && node.closest && node.closest('.about__obj')); }
+    document.addEventListener('mouseover', function (e) {
+      el.classList.toggle('is-over-grab', draggable(e.target));
+    });
+  }
+
+  figmaCursor();
+
   timelineCurve();
   timelineActive();
   shaderFlow();
   polyhedron();
+  dotMatrix();
   inView();
   runaround();
 
