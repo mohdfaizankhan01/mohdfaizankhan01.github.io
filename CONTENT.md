@@ -106,6 +106,9 @@ Figma · wireframing · prototyping · user research · interaction design · re
 - **Role line:** Accessible mobility for disabled riders · UNIGE
 - **Description:** A full platform for Geneva's TPG Flex transport: an LLM voice-booking agent for people who can't use the app, a crowdsourcing pipeline for community accessibility reports, and per-disability scoring for every stop — replacing a single misleading "accessible / not" label.
 - **Stack:** FastAPI · SQLite · WebSocket · Groq LLaMA-3.3-70B · faster-whisper · OSRM · Epicollect5
+- **Recognition:** two separate events, do not merge them.
+  1. **Winner — hackademIA, SDG Solution Space, Spring 2026.** Four-hour hackathon on crowdsourcing and AI, Campus Biotech Innovation Park, with UNIGE. Held on the author's account; no document filed here. If a recap post, prize email or results slide exists, save it — this is the claim most worth being able to evidence.
+  2. **Citizen Science for Sustainability Challenge 2026 — team AIBility.** Certificate of *Participation*, cited "for their unique contribution to citizen science for sustainability". Signed by Chantal Britt (Bern University of Applied Sciences), Rosy Mondardini (Citizen Science Zurich), Jemy Jacob (Sustainability League); partner marks Scienscope/UNIGE, Citizen Science Zurich, SDG Solution Space, BFH. **Participation, not a placement — never write "winner" against this one.**
 - **Link:** View on GitHub → https://github.com/mohdfaizankhan01/AI.BILITY-tpgFlex
 
 ### RCnum Graph-RAG
@@ -145,6 +148,7 @@ Figma · wireframing · prototyping · user research · interaction design · re
 | Jul 2023 — Jul 2024 | Data Science / ML Lead | Robogyan Society · [robogyan.tech](https://robogyan.tech) | Turned a 100+ member group into capable practitioners — ran hands-on workshops for mixed technical and non-technical members, and became the person people came to with ML questions. |
 | Jul — Aug 2022 | Data Science Intern | TwoWaits Pvt Ltd | Built a content-based recommender over 5,000+ items using cosine similarity, >90% accuracy. |
 | 2020 — 2024 | BTech Information Technology · GPA 8.2 / 10 | GGSIPU, Delhi | National Winner — Innovate@Sigfest · 4th Worldwide — Considition 2022 · Winner — Glitch Hackathon, SNU · 1st Runner-Up — NPCI ML Hackathon. |
+| 2025 — 2027 | MSc Computer Science | Université de Genève | Winner — hackademIA, SDG Solution Space, Spring 2026 · Citizen Science for Sustainability Challenge 2026 — team AIBility. |
 
 ---
 

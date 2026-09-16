@@ -1005,6 +1005,35 @@ html:not(.js) .about mark { background-size: 100% 100%; color: var(--paper); }
   line-height: 1.6;
   color: var(--card-mute);
 }
+/* Recognition sits under the description and above the links, on its own
+   hairline: it is not part of the pitch and it is not a call to action, it is
+   the third party saying the thing back. Muted, because a line that shouts is
+   read as compensating. */
+.deck__nod {
+  /* The card is a hard height: min(100%, 520px) in the fan, so this line has
+     a budget, not just a style. Tight leading and a 9px eyebrow keep it under
+     ~50px; the first draft ran to 96px and pushed the footer out of the card. */
+  margin: var(--space-3) 0 0;
+  padding-top: 9px;
+  border-top: 1px solid var(--card-rule);
+  font-size: 0.5625rem;
+  font-weight: 500;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  line-height: 1.35;
+  color: var(--card-mute);
+}
+.deck__nod b {
+  display: block;
+  margin-top: 2px;
+  font-weight: 500;
+  font-size: 0.6875rem;
+  letter-spacing: 0.01em;
+  text-transform: none;
+  line-height: 1.3;
+  color: var(--card-fg);
+}
+
 .deck__foot {
   display: flex;
   align-items: flex-end;
@@ -2337,6 +2366,7 @@ body.is-ready .hero__copy[data-split='true'] .w {
          <p class="deck__metric"><span>Disability profiles scored</span><b>5</b></p>
          <ul class="deck__list"><li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>FastAPI + WebSocket</span></li><li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>Groq LLaMA-3.3-70B</span></li><li><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg><span>faster-whisper voice</span></li></ul>
          <p class="deck__body">A voice-booking agent for Geneva's TPG Flex, for people who cannot use the app, plus per-stop scoring in place of one misleading label.</p>
+         <p class="deck__nod">Winner &middot; Spring 2026<b>hackademIA, SDG Solution Space</b></p>
          <div class="deck__foot">
            <a class="deck__cta" href="https://github.com/mohdfaizankhan01/AI.BILITY-tpgFlex" target="_blank" rel="noopener noreferrer">GitHub<span aria-hidden="true">&#8599;</span></a>
            <p class="deck__no">01<small> / 04</small></p>
@@ -2426,6 +2456,10 @@ body.is-ready .hero__copy[data-split='true'] .w {
            <h3 class="entry__title">MSc Computer Science</h3>
            <p class="entry__org">Université de Genève</p>
            <p class="entry__detail">Applied NLP, retrieval-augmented generation, human-centred AI, and reproducible scientific computing.</p>
+           <ul class="entry__awards" aria-label="Awards">
+             <li>Winner, hackademIA &mdash; SDG Solution Space, Spring 2026</li>
+             <li>Citizen Science for Sustainability Challenge 2026</li>
+           </ul>
          </div>
        </li>
 
