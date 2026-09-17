@@ -530,7 +530,7 @@ body[data-menu-open='true'] .menu-toggle::before { opacity: 0; }
   --obj-fill: 0.70;
   float: left;
   width: clamp(210px, 25vw, 320px);
-  shape-outside: url('assets/armillary-sphere.webp');
+  shape-outside: url('assets/armillary-sphere-film.webp');
 }
 .about__stage--right {
   --obj-fill: 0.80;
@@ -542,6 +542,35 @@ body[data-menu-open='true'] .menu-toggle::before { opacity: 0; }
   display: block;
   width: 100%;
   height: auto;
+}
+
+/* ── the film ────────────────────────────────────────────────────────────
+   The still stays in the DOM and keeps doing the two jobs a <video> cannot:
+   it carries the alpha that runaround() traces for the text wrap, and it is
+   the drag target. It is only made invisible, never removed - so if the
+   video never loads, the engraving is still there and nothing else changes.
+   Screen blend is what removes the black: the clip was generated on the same
+   ink the panel is painted in, and screen against black is a no-op, so only
+   the white linework survives. */
+.about__film {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  pointer-events: none;      /* the still underneath takes the drag */
+  mix-blend-mode: screen;
+}
+.about__stage.is-draggable .about__film {
+  width: var(--obj-w);
+  translate: var(--ox, 0px) var(--oy, 0px);
+}
+.about__stage.has-film .about__obj { opacity: 0; }
+
+@media (prefers-reduced-motion: reduce) {
+  /* a spinning object is exactly what this query is asking us not to do */
+  .about__film { display: none; }
+  .about__stage.has-film .about__obj { opacity: 1; }
 }
 
 /* Once an outline is traced the stage grows to give its picture room to roam,
@@ -2273,9 +2302,12 @@ body.is-ready .hero__copy[data-split='true'] .w {
        <!-- Left object: armillary sphere, plate from Diderot's Encyclopedie via
             Wikimedia Commons, public domain, recoloured to paper on ink. -->
        <div class="about__stage about__stage--left rise">
-         <img class="about__obj" src="assets/armillary-sphere.webp"
-              width="700" height="915" decoding="async" draggable="false"
+         <img class="about__obj" src="assets/armillary-sphere-film.webp"
+              width="480" height="854" decoding="async" draggable="false"
               alt="Engraving of an armillary sphere, a ringed model of the heavens on an ornate stand.">
+         <video class="about__film" src="assets/armillary-sphere.mp4"
+                width="480" height="854" autoplay loop muted playsinline
+                preload="metadata" aria-hidden="true" tabindex="-1"></video>
        </div>
 
        <div class="about__stage about__stage--right rise">
@@ -3202,8 +3234,10 @@ async def ride(ws: WebSocket):
 
       function paint() {
         raf = null;
-        img.style.setProperty('--ox', ox.toFixed(1) + 'px');
-        img.style.setProperty('--oy', oy.toFixed(1) + 'px');
+        /* on the stage, not the picture: custom properties inherit, so the
+           still and the film on top of it move as one */
+        stage.style.setProperty('--ox', ox.toFixed(1) + 'px');
+        stage.style.setProperty('--oy', oy.toFixed(1) + 'px');
         stage.style.shapeOutside = polygon();
       }
       function schedule() { if (!raf) raf = requestAnimationFrame(paint); }
@@ -3219,7 +3253,7 @@ async def ride(ws: WebSocket):
         maxX = sw - objW;                      // horizontal room costs measure
         maxY = Math.round(objH * 0.45);        // vertical room is free
         stage.style.height = (objH + maxY) + 'px';
-        img.style.setProperty('--obj-w', objW + 'px');
+        stage.style.setProperty('--obj-w', objW + 'px');
         ox = Math.min(Math.max(ox, 0), maxX);
         oy = Math.min(Math.max(oy, 0), maxY);
       }
@@ -3791,6 +3825,32 @@ async def ride(ws: WebSocket):
   }
 
   bandHud();
+
+  /* ── the film only takes over once it can actually play ──────────────────
+     has-film is what hides the engraving underneath, so it is withheld until
+     the clip is decodable and the user has not asked for stillness. A blocked
+     autoplay, a codec the browser will not take, a file that 404s: in every
+     one of those the still is simply left where it was. */
+  function aboutFilm() {
+    var film = document.querySelector('.about__film');
+    if (!film) return;
+    var stage = film.closest('.about__stage');
+    if (!stage || reduced.matches) { film.removeAttribute('autoplay'); return; }
+
+    function show() { stage.classList.add('has-film'); }
+    if (film.readyState >= 2) show();
+    film.addEventListener('loadeddata', show, { once: true });
+    film.addEventListener('error', function () { stage.classList.remove('has-film'); });
+
+    /* decorative motion has no business running off screen */
+    if (!('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (recs) {
+      if (recs[0].isIntersecting) { var p = film.play(); if (p) p.catch(function () {}); }
+      else film.pause();
+    }, { rootMargin: '200px 0px' }).observe(stage);
+  }
+
+  aboutFilm();
 
   /* ── cursor: the Figma pointer ───────────────────────────────────────────
      Built here rather than in the markup, so scripting off leaves the page

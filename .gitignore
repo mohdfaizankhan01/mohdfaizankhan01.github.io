@@ -12,3 +12,7 @@ Faizan_Khan_Resume_Industry.pdf
 # source art the site does not ship
 faizan illustration-*.jpeg
 assets/faizan-thinking.jpg
+# raw generation and the flattened still fed to the video tool: kept on disk,
+# never in the repo. assets/armillary-sphere.mp4 is the encoded one that ships.
+assets/Armillary_sphere_rings_rotating_*.mp4
+armillary-video-ref.png
